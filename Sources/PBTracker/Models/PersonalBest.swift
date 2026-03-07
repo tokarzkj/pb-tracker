@@ -10,7 +10,8 @@ struct PersonalBest: Identifiable, Codable {
 }
 
 extension PersonalBest {
-    static var examples: [PersonalBest] = [
+    @MainActor
+    static let examples: [PersonalBest] = [
         PersonalBest(name: "Bench Press", value: 225, unit: "lbs", date: Date(), category: "Strength"),
         PersonalBest(name: "5K Run", value: 21.5, unit: "min", date: Date().addingTimeInterval(-86400 * 5), category: "Cardio"),
         PersonalBest(name: "Deadlift", value: 315, unit: "lbs", date: Date().addingTimeInterval(-86400 * 2), category: "Strength")
