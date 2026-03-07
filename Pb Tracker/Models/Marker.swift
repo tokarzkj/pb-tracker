@@ -3,11 +3,11 @@ import SwiftData
 
 @Model
 final class Marker {
-    #Unique<Marker>([\.serialNumber])
+    // Note: Removed #Unique as it is not supported by CloudKit sync in 2026.
     
     var id = UUID()
-    var name: String
-    var modelName: String
+    var name: String = ""
+    var modelName: String = ""
     var serialNumber: String?
     
     @Attribute(.externalStorage)
@@ -18,10 +18,11 @@ final class Marker {
     }
 
     // Relationship: A marker has many maintenance records
+    // Note: Explicitly made optional and provided inverse for CloudKit.
     @Relationship(deleteRule: .cascade, inverse: \MaintenanceRecord.marker)
     var maintenanceLogs: [MaintenanceRecord] = []
 
-    init(name: String, modelName: String, serialNumber: String? = nil, imageData: Data? = nil) {
+    init(name: String = "", modelName: String = "", serialNumber: String? = nil, imageData: Data? = nil) {
         self.name = name
         self.modelName = modelName
         self.serialNumber = serialNumber

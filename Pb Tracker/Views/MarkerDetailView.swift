@@ -58,8 +58,7 @@ struct MarkerDetailView: View {
             }
         }
         .sheet(isPresented: $isShowingLoggingSheet) {
-            // TODO: Replace with MaintenanceLoggingView
-            Text("Log Maintenance for \(marker.name)")
+            MaintenanceLoggingView(marker: marker)
                 .presentationDetents([.medium, .large])
         }
     }

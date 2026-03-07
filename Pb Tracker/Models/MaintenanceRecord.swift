@@ -4,14 +4,15 @@ import SwiftData
 @Model
 final class MaintenanceRecord {
     var id = UUID()
-    var date: Date
-    var shotsSinceLast: Int
-    var tasks: [String]
-    var category: MaintenanceCategory
+    var date: Date = Date()
+    var shotsSinceLast: Int = 0
+    var tasks: [String] = []
+    var category: MaintenanceCategory = MaintenanceCategory.routine
     var notes: String?
     var imageData: Data?
     
     // Relationship: Each record belongs to one Marker
+    // Note: Must be optional for CloudKit sync.
     var marker: Marker?
 
     init(
