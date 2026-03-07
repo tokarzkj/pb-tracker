@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Swift/SPM
+.build/
+.swiftpm/
+DerivedData/
+*.xcresult/
+*.xcscheme
+
+# VS Code
+.vscode/
+
+# Environment
+.env
