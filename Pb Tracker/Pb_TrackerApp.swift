@@ -1,10 +1,3 @@
-//
-//  Pb_TrackerApp.swift
-//  Pb Tracker
-//
-//  Created by Kris Tokarz on 3/7/26.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -12,7 +5,8 @@ import SwiftData
 struct Pb_TrackerApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Marker.self,
+            MaintenanceRecord.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +19,7 @@ struct Pb_TrackerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MarkerListView()
         }
         .modelContainer(sharedModelContainer)
     }
