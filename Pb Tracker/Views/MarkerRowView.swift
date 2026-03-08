@@ -38,5 +38,6 @@ struct MarkerRowView: View {
             }
         }
         .padding(.vertical, 4)
+        .contentShape(Rectangle())
     }
 }
