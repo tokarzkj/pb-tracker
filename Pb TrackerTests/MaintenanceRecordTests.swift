@@ -30,4 +30,24 @@ struct MaintenanceRecordTests {
         #expect(marker.maintenanceLogs.count == 2)
         #expect(marker.totalLifetimeShots == 3000)
     }
+
+    @Test @MainActor
+    func updatingMaintenanceRecordRecalculatesLifetimeShots() throws {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Marker.self, MaintenanceRecord.self, configurations: config)
+        let context = container.mainContext
+        
+        let marker = Marker(name: "Test CS3", modelName: "PE CS3")
+        context.insert(marker)
+        
+        let record = MaintenanceRecord(shotsSinceLast: 2000, marker: marker)
+        context.insert(record)
+        #expect(marker.totalLifetimeShots == 2000)
+        
+        // Update the shot count (fixing a mistake)
+        record.shotsSinceLast = 2500
+        try context.save()
+        
+        #expect(marker.totalLifetimeShots == 2500)
+    }
 }

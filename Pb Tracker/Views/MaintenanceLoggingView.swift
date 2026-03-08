@@ -28,13 +28,16 @@ struct MaintenanceLoggingView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Session Stats") {
+                Section {
                     DatePicker("Date", selection: $date, displayedComponents: .date)
                     
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Shots Since Last Maintenance")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                        HStack {
+                            Text("Shots Added")
+                            Text("*").foregroundStyle(.red)
+                        }
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                         
                         TextField("Number of shots", value: $shotsSinceLast, format: .number)
                             .font(.system(.title, design: .monospaced))

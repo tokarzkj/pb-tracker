@@ -5,6 +5,7 @@ struct MarkerDetailView: View {
     @Bindable var marker: Marker
     @Environment(\.modelContext) private var modelContext
     @State private var isShowingLoggingSheet = false
+    @State private var isShowingEditSheet = false
 
     var body: some View {
         List {
@@ -42,7 +43,11 @@ struct MarkerDetailView: View {
                     ContentUnavailableView("No Records", systemImage: "wrench.and.screwdriver", description: Text("You haven't logged any maintenance for this marker yet."))
                 } else {
                     ForEach(marker.maintenanceLogs.sorted(by: { $0.date > $1.date })) { record in
-                        MaintenanceRowView(record: record)
+                        NavigationLink {
+                            EditMaintenanceRecordView(record: record)
+                        } label: {
+                            MaintenanceRowView(record: record)
+                        }
                     }
                     .onDelete(perform: deleteRecords)
                 }
@@ -51,21 +56,29 @@ struct MarkerDetailView: View {
         .navigationTitle(marker.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: { isShowingLoggingSheet = true }) {
-                    Label("Log Maintenance", systemImage: "plus")
+            ToolbarItem(placement: .topBarTrailing) {
+                HStack {
+                    Button(action: { isShowingEditSheet = true }) {
+                        Label("Edit", systemImage: "pencil")
+                    }
+                    
+                    Button(action: { isShowingLoggingSheet = true }) {
+                        Label("Log Maintenance", systemImage: "plus")
+                    }
                 }
             }
         }
-        .sheet(isPresented: $isShowingLoggingSheet) {
+        .sheet(isPresented: $isShowingEditSheet) {
+            EditMarkerView(marker: marker)
+        }
+        .fullScreenCover(isPresented: $isShowingLoggingSheet) {
             MaintenanceLoggingView(marker: marker)
-                .presentationDetents([.medium, .large])
         }
     }
 
     private func deleteRecords(offsets: IndexSet) {
+        let sortedLogs = marker.maintenanceLogs.sorted(by: { $0.date > $1.date })
         for index in offsets {
-            let sortedLogs = marker.maintenanceLogs.sorted(by: { $0.date > $1.date })
             modelContext.delete(sortedLogs[index])
         }
     }

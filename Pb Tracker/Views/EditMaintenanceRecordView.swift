@@ -1,0 +1,105 @@
+import SwiftUI
+import SwiftData
+
+struct EditMaintenanceRecordView: View {
+    @Bindable var record: MaintenanceRecord
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    
+    @State private var isShowingCamera = false
+    
+    private let predefinedTasks = [
+        "Cleaning",
+        "Greasing Bolt",
+        "Replacing Screws",
+        "Replacing Grips",
+        "Replacing O-Rings",
+        "Battery Swap"
+    ]
+    
+    var body: some View {
+        Form {
+            Section {
+                DatePicker("Date", selection: $record.date, displayedComponents: .date)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Shots Added")
+                        Text("*").foregroundStyle(.red)
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    
+                    TextField("Number of shots", value: $record.shotsSinceLast, format: .number)
+                        .font(.system(.title, design: .monospaced))
+                        .keyboardType(.numberPad)
+                }
+            } header: {
+                Text("Session Details")
+            }
+            
+            Section("Tasks Performed") {
+                Picker("Category", selection: $record.category) {
+                    ForEach(MaintenanceCategory.allCases, id: \.self) { cat in
+                        Text(cat.rawValue).tag(cat)
+                    }
+                }
+                .pickerStyle(.segmented)
+                
+                ForEach(predefinedTasks, id: \.self) { task in
+                    Toggle(task, isOn: Binding(
+                        get: { record.tasks.contains(task) },
+                        set: { isSelected in
+                            if isSelected {
+                                if !record.tasks.contains(task) { record.tasks.append(task) }
+                            } else {
+                                record.tasks.removeAll { $0 == task }
+                            }
+                        }
+                    ))
+                    .toggleStyle(CheckboxToggleStyle())
+                }
+            }
+            
+            Section("Notes & Photo") {
+                TextField("Additional Notes", text: Binding(
+                    get: { record.notes ?? "" },
+                    set: { record.notes = $0.isEmpty ? nil : $0 }
+                ), axis: .vertical)
+                .lineLimit(3...10)
+                
+                if let imageData = record.imageData, let image = Image(data: imageData) {
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .onTapGesture { isShowingCamera = true }
+                } else {
+                    Button(action: { isShowingCamera = true }) {
+                        Label("Add Photo", systemImage: "camera.badge.ellipsis")
+                            .frame(maxWidth: .infinity, minHeight: 60)
+                            .background(Color.blue.opacity(0.1))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+            }
+        }
+        .navigationTitle("Edit Log")
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Done") { dismiss() }
+            }
+        }
+        .fullScreenCover(isPresented: $isShowingCamera) {
+            CameraView(capturedData: $record.imageData)
+        }
+    }
+}
+
+#Preview {
+    let record = MaintenanceRecord(shotsSinceLast: 2000, tasks: ["Cleaning"])
+    return NavigationStack {
+        EditMaintenanceRecordView(record: record)
+    }
+}

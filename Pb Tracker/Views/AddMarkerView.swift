@@ -23,10 +23,31 @@ struct AddMarkerView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Basic Info") {
-                    TextField("Marker Name (e.g., My CS3)", text: $name)
-                    TextField("Model (e.g., Planet Eclipse CS3)", text: $modelName)
-                    TextField("Serial Number", text: $serialNumber)
+                Section {
+                    HStack {
+                        Text("Name")
+                        Text("*").foregroundStyle(.red)
+                        Spacer()
+                        TextField("My CS3", text: $name)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    
+                    HStack {
+                        Text("Model")
+                        Text("*").foregroundStyle(.red)
+                        Spacer()
+                        TextField("Planet Eclipse CS3", text: $modelName)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    
+                    HStack {
+                        Text("Serial Number")
+                        Spacer()
+                        TextField("Optional", text: $serialNumber)
+                            .multilineTextAlignment(.trailing)
+                    }
+                } header: {
+                    Text("Basic Info")
                 }
 
                 Section {
