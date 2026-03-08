@@ -13,7 +13,9 @@ struct MaintenanceLoggingView: View {
     @State private var notes = ""
     @State private var selectedTasks: Set<String> = []
     @State private var imageData: Data?
+    @State private var selectedItem: PhotosPickerItem?
     @State private var isShowingCamera = false
+    @State private var isImageLoading = false
     
     private let predefinedTasks = [
         "Cleaning",
@@ -69,21 +71,32 @@ struct MaintenanceLoggingView: View {
                     TextField("Additional Notes", text: $notes, axis: .vertical)
                         .lineLimit(3...10)
                     
-                    if let imageData, let image = Image(data: imageData) {
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: 150)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .onTapGesture { isShowingCamera = true }
-                    } else {
-                        Button(action: { isShowingCamera = true }) {
-                            Label("Add Photo of Work", systemImage: "camera.badge.ellipsis")
-                                .frame(maxWidth: .infinity, minHeight: 60)
-                                .background(Color.blue.opacity(0.1))
+                    VStack(spacing: 16) {
+                        if isImageLoading {
+                            ProgressView()
+                                .frame(height: 150)
+                        } else if let imageData, let image = Image(data: imageData) {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 150)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
+
+                        HStack(spacing: 20) {
+                            PhotosPicker(selection: $selectedItem, matching: .images) {
+                                Label("Photos", systemImage: "photo.on.rectangle")
+                            }
+                            .buttonStyle(.bordered)
+
+                            Button(action: { isShowingCamera = true }) {
+                                Label("Camera", systemImage: "camera.fill")
+                            }
+                            .buttonStyle(.bordered)
+                        }
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
                 }
             }
             .navigationTitle("Log Maintenance")
@@ -101,6 +114,15 @@ struct MaintenanceLoggingView: View {
             }
             .fullScreenCover(isPresented: $isShowingCamera) {
                 CameraView(capturedData: $imageData)
+            }
+            .onChange(of: selectedItem) { oldValue, newItem in
+                Task {
+                    isImageLoading = true
+                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                        imageData = data
+                    }
+                    isImageLoading = false
+                }
             }
         }
     }

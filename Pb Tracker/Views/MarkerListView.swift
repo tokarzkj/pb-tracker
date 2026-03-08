@@ -56,7 +56,7 @@ struct MarkerListView: View {
                 }
                 .sheet(isPresented: $isShowingAddMarkerSheet) {
                     AddMarkerView()
-                        .presentationDetents([.medium])
+                        .presentationDetents([.fraction(0.7), .large])
                         .presentationSizing(.form)
                 }
             }
