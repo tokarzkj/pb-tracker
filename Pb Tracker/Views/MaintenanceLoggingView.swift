@@ -9,7 +9,6 @@ struct MaintenanceLoggingView: View {
     let marker: Marker
     
     @State private var date = Date()
-    @State private var shotsSinceLast = 0
     @State private var category: MaintenanceCategory = .routine
     @State private var notes = ""
     @State private var selectedTasks: Set<String> = []
@@ -30,35 +29,8 @@ struct MaintenanceLoggingView: View {
             Form {
                 Section {
                     DatePicker("Date", selection: $date, displayedComponents: .date)
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Text("Shots Added")
-                            Text("*").foregroundStyle(.red)
-                        }
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        
-                        TextField("Number of shots", value: $shotsSinceLast, format: .number)
-                            .font(.system(.title, design: .monospaced))
-                            .keyboardType(.numberPad)
-                        
-                        HStack {
-                            Button("+1000 (1/2 Case)") { shotsSinceLast += 1000 }
-                                .buttonStyle(.bordered)
-                                .controlSize(.small)
-                            
-                            Button("+2000 (Case)") { shotsSinceLast += 2000 }
-                                .buttonStyle(.bordered)
-                                .controlSize(.small)
-                            
-                            Button("Reset") { shotsSinceLast = 0 }
-                                .buttonStyle(.bordered)
-                                .controlSize(.small)
-                                .foregroundStyle(.red)
-                        }
-                    }
-                    .padding(.vertical, 4)
+                } header: {
+                    Text("Date")
                 }
                 
                 Section("Tasks Performed") {
@@ -128,7 +100,6 @@ struct MaintenanceLoggingView: View {
     private func saveRecord() {
         let record = MaintenanceRecord(
             date: date,
-            shotsSinceLast: shotsSinceLast,
             tasks: Array(selectedTasks),
             category: category,
             notes: notes.isEmpty ? nil : notes,
@@ -144,24 +115,6 @@ struct MaintenanceLoggingView: View {
         } catch {
             print("Failed to save maintenance record: \(error.localizedDescription)")
         }
-    }
-}
-
-struct CheckboxToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        Button(action: {
-            configuration.isOn.toggle()
-        }) {
-            HStack {
-                Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(configuration.isOn ? .blue : .secondary)
-                    .font(.title3)
-                configuration.label
-                    .foregroundStyle(.primary)
-                Spacer()
-            }
-        }
-        .buttonStyle(.plain)
     }
 }
 

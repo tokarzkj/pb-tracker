@@ -21,21 +21,8 @@ struct EditMaintenanceRecordView: View {
         Form {
             Section {
                 DatePicker("Date", selection: $record.date, displayedComponents: .date)
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Shots Added")
-                        Text("*").foregroundStyle(.red)
-                    }
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    
-                    TextField("Number of shots", value: $record.shotsSinceLast, format: .number)
-                        .font(.system(.title, design: .monospaced))
-                        .keyboardType(.numberPad)
-                }
             } header: {
-                Text("Session Details")
+                Text("Date")
             }
             
             Section("Tasks Performed") {
@@ -98,7 +85,7 @@ struct EditMaintenanceRecordView: View {
 }
 
 #Preview {
-    let record = MaintenanceRecord(shotsSinceLast: 2000, tasks: ["Cleaning"])
+    let record = MaintenanceRecord(tasks: ["Cleaning"])
     return NavigationStack {
         EditMaintenanceRecordView(record: record)
     }

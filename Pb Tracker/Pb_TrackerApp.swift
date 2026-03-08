@@ -7,6 +7,7 @@ struct Pb_TrackerApp: App {
         let schema = Schema([
             Marker.self,
             MaintenanceRecord.self,
+            Outing.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

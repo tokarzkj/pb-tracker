@@ -14,13 +14,16 @@ final class Marker {
     var imageData: Data?
     
     var totalLifetimeShots: Int {
-        maintenanceLogs.reduce(0) { $0 + $1.shotsSinceLast }
+        outings.reduce(0) { $0 + $1.shotsFired }
     }
 
     // Relationship: A marker has many maintenance records
-    // Note: Explicitly made optional and provided inverse for CloudKit.
     @Relationship(deleteRule: .cascade, inverse: \MaintenanceRecord.marker)
     var maintenanceLogs: [MaintenanceRecord] = []
+    
+    // Relationship: A marker has many outings
+    @Relationship(deleteRule: .cascade, inverse: \Outing.marker)
+    var outings: [Outing] = []
 
     init(name: String = "", modelName: String = "", serialNumber: String? = nil, imageData: Data? = nil) {
         self.name = name

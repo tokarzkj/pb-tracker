@@ -131,9 +131,6 @@ struct MaintenanceRowView: View {
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 4) {
-                Text("+\(record.shotsSinceLast)")
-                    .font(.system(.subheadline, design: .monospaced))
-                    .bold()
                 Text(record.date, style: .date)
                     .font(.caption2)
                     .foregroundStyle(.secondary)

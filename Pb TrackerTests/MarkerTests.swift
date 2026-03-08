@@ -1,4 +1,6 @@
 import Testing
+import SwiftData
+import Foundation
 @testable import PBTracker
 
 struct MarkerTests {
@@ -16,47 +18,42 @@ struct MarkerTests {
     }
 
     @Test @MainActor
-    func deletingMaintenanceRecordRecalculatesLifetimeShots() throws {
+    func addingOutingUpdatesLifetimeShots() throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: Marker.self, MaintenanceRecord.self, configurations: config)
+        let container = try ModelContainer(for: Marker.self, Outing.self, configurations: config)
         let context = container.mainContext
         
         let marker = Marker(name: "Test CS3", modelName: "PE CS3")
         context.insert(marker)
         
-        let record1 = MaintenanceRecord(shotsSinceLast: 2000, marker: marker)
-        let record2 = MaintenanceRecord(shotsSinceLast: 1500, marker: marker)
-        context.insert(record1)
-        context.insert(record2)
+        let outing = Outing(shotsFired: 2000, marker: marker)
+        context.insert(outing)
         
-        #expect(marker.totalLifetimeShots == 3500)
-        
-        // Delete one record
-        context.delete(record1)
-        try context.save()
-        
-        #expect(marker.totalLifetimeShots == 1500)
+        #expect(marker.totalLifetimeShots == 2000)
     }
 
     @Test @MainActor
-    func markerCascadeDeletesMaintenanceRecords() throws {
+    func markerCascadeDeletesRecords() throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: Marker.self, MaintenanceRecord.self, configurations: config)
+        let container = try ModelContainer(for: Marker.self, MaintenanceRecord.self, Outing.self, configurations: config)
         let context = container.mainContext
         
         let marker = Marker(name: "Delete Me", modelName: "PE CS3")
         context.insert(marker)
         
-        let record = MaintenanceRecord(shotsSinceLast: 1000, marker: marker)
+        let record = MaintenanceRecord(tasks: ["Cleaning"], marker: marker)
+        let outing = Outing(shotsFired: 1000, marker: marker)
         context.insert(record)
+        context.insert(outing)
         
         // Delete the marker
         context.delete(marker)
         try context.save()
         
-        // Verify both are gone
-        let fetchDescriptor = FetchDescriptor<MaintenanceRecord>()
-        let records = try context.fetch(fetchDescriptor)
+        // Verify all are gone
+        let records = try context.fetch(FetchDescriptor<MaintenanceRecord>())
+        let outings = try context.fetch(FetchDescriptor<Outing>())
         #expect(records.isEmpty)
+        #expect(outings.isEmpty)
     }
 }
