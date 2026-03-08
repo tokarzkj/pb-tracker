@@ -29,4 +29,3 @@ final class MaintenanceRecord {
         self.marker = marker
     }
 }
-}

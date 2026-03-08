@@ -43,17 +43,25 @@ struct MaintenanceLoggingView: View {
                     .padding(.vertical, 4)
                     
                     ForEach(predefinedTasks, id: \.self) { task in
-                        Toggle(task, isOn: Binding(
-                            get: { selectedTasks.contains(task) },
-                            set: { isSelected in
-                                if isSelected {
-                                    selectedTasks.insert(task)
-                                } else {
-                                    selectedTasks.remove(task)
-                                }
+                        Button {
+                            if selectedTasks.contains(task) {
+                                selectedTasks.remove(task)
+                            } else {
+                                selectedTasks.insert(task)
                             }
-                        ))
-                        .toggleStyle(CheckboxToggleStyle())
+                        } label: {
+                            HStack {
+                                Image(systemName: selectedTasks.contains(task) ? "checkmark.circle.fill" : "circle")
+                                    .foregroundStyle(selectedTasks.contains(task) ? .blue : .secondary)
+                                    .font(.title3)
+                                
+                                Text(task)
+                                    .foregroundStyle(.primary)
+                                
+                                Spacer()
+                            }
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 

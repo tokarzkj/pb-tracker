@@ -33,7 +33,7 @@ struct CameraView: View {
                 .padding(.bottom, 30)
             }
         }
-        .onChange(of: cameraManager.capturedData) { _, newData in
+        .onChange(of: cameraManager.capturedData) { oldValue, newData in
             if let newData {
                 capturedData = newData
                 dismiss()

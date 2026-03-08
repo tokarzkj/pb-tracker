@@ -87,7 +87,7 @@ struct EditMarkerView: View {
             .fullScreenCover(isPresented: $isShowingCamera) {
                 CameraView(capturedData: $marker.imageData)
             }
-            .onChange(of: selectedItem) { newItem in
+            .onChange(of: selectedItem) { oldValue, newItem in
                 Task {
                     isImageLoading = true
                     if let data = try? await newItem?.loadTransferable(type: Data.self) {

@@ -34,17 +34,25 @@ struct EditMaintenanceRecordView: View {
                 .pickerStyle(.segmented)
                 
                 ForEach(predefinedTasks, id: \.self) { task in
-                    Toggle(task, isOn: Binding(
-                        get: { record.tasks.contains(task) },
-                        set: { isSelected in
-                            if isSelected {
-                                if !record.tasks.contains(task) { record.tasks.append(task) }
-                            } else {
-                                record.tasks.removeAll { $0 == task }
-                            }
+                    Button {
+                        if record.tasks.contains(task) {
+                            record.tasks.removeAll { $0 == task }
+                        } else {
+                            record.tasks.append(task)
                         }
-                    ))
-                    .toggleStyle(CheckboxToggleStyle())
+                    } label: {
+                        HStack {
+                            Image(systemName: record.tasks.contains(task) ? "checkmark.circle.fill" : "circle")
+                                .foregroundStyle(record.tasks.contains(task) ? .blue : .secondary)
+                                .font(.title3)
+                            
+                            Text(task)
+                                .foregroundStyle(.primary)
+                            
+                            Spacer()
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             
