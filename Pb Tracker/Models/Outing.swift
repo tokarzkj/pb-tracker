@@ -4,37 +4,27 @@ import SwiftData
 @Model
 final class Outing {
     var id = UUID()
-    var date: Date = Date()
-    var fieldLocation: String = ""
-    var paintBrand: String = ""
-    var paintGrade: String = ""
+    var shotsFired: Int = 0
     var eliminations: Int = 0
     var timesEliminated: Int = 0
-    var shotsFired: Int = 0
-    var notes: String?
     
-    // Relationship: Each outing is tied to one marker
+    // Relationship: Each performance is tied to one marker
     var marker: Marker?
+    
+    // Relationship: Each performance is part of a session
+    var session: Session?
 
     init(
-        date: Date = Date(),
-        fieldLocation: String = "",
-        paintBrand: String = "",
-        paintGrade: String = "",
+        shotsFired: Int = 0,
         eliminations: Int = 0,
         timesEliminated: Int = 0,
-        shotsFired: Int = 0,
-        notes: String? = nil,
-        marker: Marker? = nil
+        marker: Marker? = nil,
+        session: Session? = nil
     ) {
-        self.date = date
-        self.fieldLocation = fieldLocation
-        self.paintBrand = paintBrand
-        self.paintGrade = paintGrade
+        self.shotsFired = shotsFired
         self.eliminations = eliminations
         self.timesEliminated = timesEliminated
-        self.shotsFired = shotsFired
-        self.notes = notes
         self.marker = marker
+        self.session = session
     }
 }

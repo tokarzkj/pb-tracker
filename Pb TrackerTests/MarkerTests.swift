@@ -1,7 +1,7 @@
 import Testing
 import SwiftData
 import Foundation
-@testable import PBTracker
+@testable import Pb_Tracker
 
 struct MarkerTests {
     @Test func markerInitialization() {

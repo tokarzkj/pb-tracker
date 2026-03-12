@@ -5,6 +5,7 @@ struct MarkerDetailView: View {
     @Bindable var marker: Marker
     @Environment(\.modelContext) private var modelContext
     @State private var isShowingLoggingSheet = false
+    @State private var isShowingOutingSheet = false
     @State private var isShowingEditSheet = false
 
     var body: some View {
@@ -31,12 +32,30 @@ struct MarkerDetailView: View {
                     HStack(spacing: 40) {
                         StatView(title: "Lifetime", value: "\(marker.totalLifetimeShots)")
                         StatView(title: "Records", value: "\(marker.maintenanceLogs.count)")
+                        StatView(title: "Outings", value: "\(marker.outings.count)")
                     }
                 }
                 .padding(.vertical)
             }
             .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets())
+
+            Section("Session History") {
+                if marker.outings.isEmpty {
+                    ContentUnavailableView("No Sessions", systemImage: "flag.checkered", description: Text("You haven't logged any field sessions for this marker yet."))
+                } else {
+                    ForEach(marker.outings.sorted(by: { $0.session?.date ?? Date() > $1.session?.date ?? Date() })) { outing in
+                        if let session = outing.session {
+                            NavigationLink {
+                                EditOutingView(outing: outing)
+                            } label: {
+                                OutingRowView(outing: outing, session: session)
+                            }
+                        }
+                    }
+                    .onDelete(perform: deleteOutings)
+                }
+            }
 
             Section("Maintenance History") {
                 if marker.maintenanceLogs.isEmpty {
@@ -57,14 +76,20 @@ struct MarkerDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                HStack {
+                Menu {
                     Button(action: { isShowingEditSheet = true }) {
-                        Label("Edit", systemImage: "pencil")
+                        Label("Edit Marker", systemImage: "pencil")
+                    }
+                    
+                    Button(action: { isShowingOutingSheet = true }) {
+                        Label("New Session", systemImage: "flag.checkered")
                     }
                     
                     Button(action: { isShowingLoggingSheet = true }) {
-                        Label("Log Maintenance", systemImage: "plus")
+                        Label("Log Maintenance", systemImage: "wrench.and.screwdriver")
                     }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
             }
         }
@@ -74,6 +99,9 @@ struct MarkerDetailView: View {
         .fullScreenCover(isPresented: $isShowingLoggingSheet) {
             MaintenanceLoggingView(marker: marker)
         }
+        .fullScreenCover(isPresented: $isShowingOutingSheet) {
+            LogSessionView()
+        }
     }
 
     private func deleteRecords(offsets: IndexSet) {
@@ -81,6 +109,43 @@ struct MarkerDetailView: View {
         for index in offsets {
             modelContext.delete(sortedLogs[index])
         }
+    }
+
+    private func deleteOutings(offsets: IndexSet) {
+        let sortedOutings = marker.outings.sorted(by: { $0.session?.date ?? Date() > $1.session?.date ?? Date() })
+        for index in offsets {
+            modelContext.delete(sortedOutings[index])
+        }
+    }
+}
+
+struct OutingRowView: View {
+    let outing: Outing
+    let session: Session
+
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Image(systemName: session.rating.icon)
+                        .foregroundStyle(session.rating.color)
+                    Text(session.fieldLocation)
+                        .font(.headline)
+                }
+                
+                HStack(spacing: 12) {
+                    Label("\(outing.shotsFired) shots", systemImage: "bolt.fill")
+                    Label("\(outing.eliminations) Kills", systemImage: "target")
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Text(session.date, style: .date)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 4)
     }
 }
 
