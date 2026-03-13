@@ -127,7 +127,8 @@ struct OutingRowView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text(session.rating.icon)
+                    Image(systemName: session.rating.icon)
+                        .foregroundStyle(session.rating.color)
                     Text(session.fieldLocation)
                         .font(.headline)
                 }

@@ -28,7 +28,7 @@ struct LogSessionView: View {
                 Section("Session Rating") {
                     Picker("Rating", selection: $rating) {
                         ForEach(OutingRating.allCases, id: \.self) { rate in
-                            Text(rate.icon).tag(rate)
+                            Image(systemName: rate.icon).tag(rate)
                         }
                     }
                     .pickerStyle(.segmented)
