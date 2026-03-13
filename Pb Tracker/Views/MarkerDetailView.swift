@@ -100,7 +100,7 @@ struct MarkerDetailView: View {
             MaintenanceLoggingView(marker: marker)
         }
         .fullScreenCover(isPresented: $isShowingOutingSheet) {
-            LogSessionView()
+            LogSessionView(initialMarker: marker)
         }
     }
 
@@ -127,8 +127,7 @@ struct OutingRowView: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Image(systemName: session.rating.icon)
-                        .foregroundStyle(session.rating.color)
+                    Text(session.rating.icon)
                     Text(session.fieldLocation)
                         .font(.headline)
                 }

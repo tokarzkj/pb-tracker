@@ -6,6 +6,7 @@ struct AddOutingToSessionView: View {
     @Environment(\.dismiss) private var dismiss
     
     let session: Session
+    let initialMarker: Marker?
     
     @Query(sort: \Marker.name) private var markers: [Marker]
     
@@ -13,6 +14,12 @@ struct AddOutingToSessionView: View {
     @State private var shotsFired = 0
     @State private var eliminations = 0
     @State private var timesEliminated = 0
+
+    init(session: Session, initialMarker: Marker?) {
+        self.session = session
+        self.initialMarker = initialMarker
+        self._selectedMarker = State(initialValue: initialMarker)
+    }
     
     var body: some View {
         Form {
@@ -95,5 +102,6 @@ struct AddOutingToSessionView: View {
             session: session
         )
         modelContext.insert(outing)
+        try? modelContext.save()
     }
 }

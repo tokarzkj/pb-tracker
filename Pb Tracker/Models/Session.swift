@@ -9,9 +9,9 @@ enum OutingRating: String, Codable, CaseIterable {
     
     var icon: String {
         switch self {
-        case .poor: return "face.frowning"
-        case .neutral: return "face.dashed"
-        case .great: return "face.smiling"
+        case .poor: return "☹️"
+        case .neutral: return "😐"
+        case .great: return "🙂"
         }
     }
     

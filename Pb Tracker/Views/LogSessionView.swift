@@ -5,6 +5,8 @@ struct LogSessionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
+    let initialMarker: Marker?
+    
     @State private var date = Date()
     @State private var fieldLocation = ""
     @State private var paintBrand = ""
@@ -26,7 +28,7 @@ struct LogSessionView: View {
                 Section("Session Rating") {
                     Picker("Rating", selection: $rating) {
                         ForEach(OutingRating.allCases, id: \.self) { rate in
-                            Image(systemName: rate.icon).tag(rate)
+                            Text(rate.icon).tag(rate)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -57,7 +59,7 @@ struct LogSessionView: View {
             }
             .navigationDestination(isPresented: $isShowingAddOuting) {
                 if let session = createdSession {
-                    AddOutingToSessionView(session: session)
+                    AddOutingToSessionView(session: session, initialMarker: initialMarker)
                 }
             }
         }
@@ -74,11 +76,17 @@ struct LogSessionView: View {
         )
         
         modelContext.insert(session)
-        createdSession = session
-        isShowingAddOuting = true
+        
+        do {
+            try modelContext.save()
+            createdSession = session
+            isShowingAddOuting = true
+        } catch {
+            print("Failed to save session: \(error.localizedDescription)")
+        }
     }
 }
 
 #Preview {
-    LogSessionView()
+    LogSessionView(initialMarker: nil)
 }

@@ -11,8 +11,7 @@ struct EditOutingView: View {
                 if let session = outing.session {
                     Section("Session Info") {
                         HStack {
-                            Image(systemName: session.rating.icon)
-                                .foregroundStyle(session.rating.color)
+                            Text(session.rating.icon)
                             Text(session.fieldLocation)
                         }
                         Text(session.date, style: .date)
