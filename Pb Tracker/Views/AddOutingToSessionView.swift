@@ -7,6 +7,7 @@ struct AddOutingToSessionView: View {
     
     let session: Session
     let initialMarker: Marker?
+    let onFinish: () -> Void
     
     @Query(sort: \Marker.name) private var markers: [Marker]
     
@@ -15,9 +16,10 @@ struct AddOutingToSessionView: View {
     @State private var eliminations = 0
     @State private var timesEliminated = 0
 
-    init(session: Session, initialMarker: Marker?) {
+    init(session: Session, initialMarker: Marker?, onFinish: @escaping () -> Void) {
         self.session = session
         self.initialMarker = initialMarker
+        self.onFinish = onFinish
         self._selectedMarker = State(initialValue: initialMarker)
     }
     
@@ -80,7 +82,7 @@ struct AddOutingToSessionView: View {
     
     private func saveOutingAndFinish() {
         saveOuting()
-        dismiss()
+        onFinish()
     }
     
     private func saveOutingAndKeepAdding() {

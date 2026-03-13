@@ -59,7 +59,7 @@ struct LogSessionView: View {
             }
             .navigationDestination(isPresented: $isShowingAddOuting) {
                 if let session = createdSession {
-                    AddOutingToSessionView(session: session, initialMarker: initialMarker)
+                    AddOutingToSessionView(session: session, initialMarker: initialMarker, onFinish: { dismiss() })
                 }
             }
         }
