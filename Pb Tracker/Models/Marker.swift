@@ -15,6 +15,30 @@ final class Marker {
         outings.reduce(0) { $0 + $1.shotsFired }
     }
 
+    var daysSinceLastMaintenance: Int? {
+        guard let lastRecord = maintenanceLogs.sorted(by: { $0.date > $1.date }).first else {
+            return nil
+        }
+        let calendar = Calendar.current
+        let startOfToday = calendar.startOfDay(for: Date())
+        let startOfRecordDay = calendar.startOfDay(for: lastRecord.date)
+        let components = calendar.dateComponents([.day], from: startOfRecordDay, to: startOfToday)
+        return components.day
+    }
+
+    var averageEliminations: Double {
+        guard !outings.isEmpty else { return 0 }
+        let totalEliminations = outings.reduce(0) { $0 + $1.eliminations }
+        return Double(totalEliminations) / Double(outings.count)
+    }
+
+    var kdRatio: Double {
+        let totalEliminations = outings.reduce(0) { $0 + $1.eliminations }
+        let totalTimesEliminated = outings.reduce(0) { $0 + $1.timesEliminated }
+        guard totalTimesEliminated > 0 else { return Double(totalEliminations) }
+        return Double(totalEliminations) / Double(totalTimesEliminated)
+    }
+
     // Relationship: A marker has many maintenance records
     @Relationship(deleteRule: .cascade, inverse: \MaintenanceRecord.marker)
     var maintenanceLogs: [MaintenanceRecord] = []

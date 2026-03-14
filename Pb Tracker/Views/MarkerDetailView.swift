@@ -40,6 +40,32 @@ struct MarkerDetailView: View {
             .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets())
 
+            Section("Performance Stats") {
+                HStack {
+                    Label("Avg Eliminations", systemImage: "target")
+                    Spacer()
+                    Text(String(format: "%.1f", marker.averageEliminations))
+                        .bold()
+                }
+                HStack {
+                    Label("K/D Ratio", systemImage: "scalemass")
+                    Spacer()
+                    Text(String(format: "%.2f", marker.kdRatio))
+                        .bold()
+                }
+                HStack {
+                    Label("Last Maintenance", systemImage: "clock")
+                    Spacer()
+                    if let days = marker.daysSinceLastMaintenance {
+                        Text("\(days) days ago")
+                            .foregroundStyle(days > 30 ? .red : .primary)
+                    } else {
+                        Text("Never")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+
             Section("Session History") {
                 if marker.outings.isEmpty {
                     ContentUnavailableView("No Sessions", systemImage: "flag.checkered", description: Text("You haven't logged any field sessions for this marker yet."))

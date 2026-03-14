@@ -21,7 +21,7 @@ struct Pb_TrackerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MarkerListView()
+            MainTabView()
         }
         .modelContainer(sharedModelContainer)
     }
