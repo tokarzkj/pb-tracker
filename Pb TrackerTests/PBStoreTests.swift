@@ -1,5 +1,5 @@
 import XCTest
-@testable import PBTracker
+@testable import Pb_Tracker
 
 final class PBStoreTests: XCTestCase {
     func testAddPB() throws {

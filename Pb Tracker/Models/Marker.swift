@@ -3,8 +3,6 @@ import SwiftData
 
 @Model
 final class Marker {
-    // Note: Removed #Unique as it is not supported by CloudKit sync in 2026.
-    
     var id = UUID()
     var name: String = ""
     var modelName: String = ""
@@ -21,7 +19,7 @@ final class Marker {
     @Relationship(deleteRule: .cascade, inverse: \MaintenanceRecord.marker)
     var maintenanceLogs: [MaintenanceRecord] = []
     
-    // Relationship: A marker has many outings
+    // Relationship: A marker has many performances (Outings)
     @Relationship(deleteRule: .cascade, inverse: \Outing.marker)
     var outings: [Outing] = []
 
