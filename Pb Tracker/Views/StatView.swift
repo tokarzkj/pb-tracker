@@ -22,6 +22,8 @@ struct StatView: View {
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(title): \(value)")
     }
 }
 

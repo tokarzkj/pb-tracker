@@ -68,18 +68,28 @@ struct MarkerDetailView: View {
             }
 
             if !marker.outings.isEmpty {
-                Section("Performance Trend") {
+                Section {
                     Chart {
-                        ForEach(marker.outings.sorted(by: { $0.session?.date ?? .distantPast < $1.session?.date ?? .distantPast }).suffix(5)) { outing in
+                        let trendOutings = marker.outings.sorted(by: { $0.session?.date ?? .distantPast < $1.session?.date ?? .distantPast }).suffix(5)
+                        ForEach(trendOutings) { outing in
                             BarMark(
                                 x: .value("Date", outing.session?.date ?? Date(), unit: .day),
                                 y: .value("Shots", outing.shotsFired)
                             )
-                            .foregroundStyle(Color.blue.gradient)
+                            .foregroundStyle(Color.orange.gradient)
+                            .accessibilityLabel("\(outing.session?.date.formatted(date: .abbreviated, time: .omitted) ?? ""): \(outing.shotsFired) shots")
                         }
                     }
                     .frame(height: 150)
                     .padding(.vertical, 8)
+                    .chartYAxis {
+                        AxisMarks(position: .leading)
+                    }
+                    .chartXAxis {
+                        AxisMarks(values: .stride(by: .day))
+                    }
+                } header: {
+                    Text("Shot Trend (Last 5)")
                 }
             }
 

@@ -16,12 +16,12 @@ final class Marker {
     }
 
     var daysSinceLastMaintenance: Int? {
-        guard let lastRecord = maintenanceLogs.sorted(by: { $0.date > $1.date }).first else {
+        guard let lastDate = maintenanceLogs.map({ $0.date }).max() else {
             return nil
         }
         let calendar = Calendar.current
         let startOfToday = calendar.startOfDay(for: Date())
-        let startOfRecordDay = calendar.startOfDay(for: lastRecord.date)
+        let startOfRecordDay = calendar.startOfDay(for: lastDate)
         let components = calendar.dateComponents([.day], from: startOfRecordDay, to: startOfToday)
         return components.day
     }
