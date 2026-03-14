@@ -23,3 +23,8 @@ Implement the `Outing` UI, performance stats (Kills/Deaths), and shot logging. T
 - Verified the multi-marker logic with comprehensive unit tests in `OutingTests.swift`.
 - Filtered the marker selection in the "Add Outing" flow to prevent duplicate marker entries in a single session.
 - Fixed `EditOutingView` and `MarkerDetailView` to use the new hierarchical relationships.
+- **Bug Fixes & Polish:**
+  - Added `Session` to SwiftData schema in `Pb_TrackerApp` to resolve persistence issue.
+  - Implemented pre-selection of markers in the UI flow when logging an outing from a marker's detail view.
+  - Fixed navigation logic to dismiss the entire flow upon tapping "Add & Finish".
+  - Switched session ratings to use verified SF Symbols (`face.smiling`, `face.dashed`, `hand.thumbsdown`) avoiding unavailable symbol warnings.
