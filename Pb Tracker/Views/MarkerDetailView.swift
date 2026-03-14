@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import Charts
 
 struct MarkerDetailView: View {
     @Bindable var marker: Marker
@@ -63,6 +64,22 @@ struct MarkerDetailView: View {
                         Text("Never")
                             .foregroundStyle(.secondary)
                     }
+                }
+            }
+
+            if !marker.outings.isEmpty {
+                Section("Performance Trend") {
+                    Chart {
+                        ForEach(marker.outings.sorted(by: { $0.session?.date ?? .distantPast < $1.session?.date ?? .distantPast }).suffix(5)) { outing in
+                            BarMark(
+                                x: .value("Date", outing.session?.date ?? Date(), unit: .day),
+                                y: .value("Shots", outing.shotsFired)
+                            )
+                            .foregroundStyle(Color.blue.gradient)
+                        }
+                    }
+                    .frame(height: 150)
+                    .padding(.vertical, 8)
                 }
             }
 
