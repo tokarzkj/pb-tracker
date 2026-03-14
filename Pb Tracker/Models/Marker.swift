@@ -28,15 +28,16 @@ final class Marker {
 
     var averageEliminations: Double {
         guard !outings.isEmpty else { return 0 }
-        let totalEliminations = outings.reduce(0) { $0 + $1.eliminations }
-        return Double(totalEliminations) / Double(outings.count)
+        let total = outings.reduce(0) { $0 + $1.eliminations }
+        return Double(total) / Double(outings.count)
     }
 
     var kdRatio: Double {
-        let totalEliminations = outings.reduce(0) { $0 + $1.eliminations }
-        let totalTimesEliminated = outings.reduce(0) { $0 + $1.timesEliminated }
-        guard totalTimesEliminated > 0 else { return Double(totalEliminations) }
-        return Double(totalEliminations) / Double(totalTimesEliminated)
+        let stats = outings.reduce((kills: 0, deaths: 0)) { acc, outing in
+            (acc.kills + outing.eliminations, acc.deaths + outing.timesEliminated)
+        }
+        guard stats.deaths > 0 else { return Double(stats.kills) }
+        return Double(stats.kills) / Double(stats.deaths)
     }
 
     // Relationship: A marker has many maintenance records

@@ -30,9 +30,9 @@ struct MarkerDetailView: View {
                     }
 
                     HStack(spacing: 40) {
-                        StatView(title: "Lifetime", value: "\(marker.totalLifetimeShots)")
-                        StatView(title: "Records", value: "\(marker.maintenanceLogs.count)")
-                        StatView(title: "Outings", value: "\(marker.outings.count)")
+                        StatView(title: "Lifetime", value: "\(marker.totalLifetimeShots)", icon: "bolt.fill", color: .orange)
+                        StatView(title: "Records", value: "\(marker.maintenanceLogs.count)", icon: "wrench.and.screwdriver", color: .blue)
+                        StatView(title: "Outings", value: "\(marker.outings.count)", icon: "flag.checkered", color: .green)
                     }
                 }
                 .padding(.vertical)
@@ -183,23 +183,6 @@ struct OutingRowView: View {
         MarkerDetailView(marker: marker)
     }
     .modelContainer(container)
-}
-
-struct StatView: View {
-    let title: String
-    let value: String
-
-    var body: some View {
-        VStack(spacing: 4) {
-            Text(value)
-                .font(.system(.title2, design: .monospaced))
-                .bold()
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
-        }
-    }
 }
 
 struct MaintenanceRowView: View {
