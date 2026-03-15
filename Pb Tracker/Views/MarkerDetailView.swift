@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftData
-import Charts
 
 struct MarkerDetailView: View {
     @Bindable var marker: Marker
@@ -29,69 +28,22 @@ struct MarkerDetailView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 24))
                             .foregroundStyle(.blue)
                     }
-
-                    HStack(spacing: 40) {
-                        StatView(title: "Lifetime", value: "\(marker.totalLifetimeShots)", icon: "bolt.fill", color: .orange)
-                        StatView(title: "Records", value: "\(marker.maintenanceLogs.count)", icon: "wrench.and.screwdriver", color: .blue)
-                        StatView(title: "Outings", value: "\(marker.outings.count)", icon: "flag.checkered", color: .green)
+                    
+                    VStack(spacing: 4) {
+                        Text(marker.modelName)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        if let serial = marker.serialNumber {
+                            Text("S/N: \(serial)")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
                     }
                 }
                 .padding(.vertical)
             }
             .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets())
-
-            Section("Performance Stats") {
-                HStack {
-                    Label("Avg Eliminations", systemImage: "target")
-                    Spacer()
-                    Text(String(format: "%.1f", marker.averageEliminations))
-                        .bold()
-                }
-                HStack {
-                    Label("K/D Ratio", systemImage: "scalemass")
-                    Spacer()
-                    Text(String(format: "%.2f", marker.kdRatio))
-                        .bold()
-                }
-                HStack {
-                    Label("Last Maintenance", systemImage: "clock")
-                    Spacer()
-                    if let days = marker.daysSinceLastMaintenance {
-                        Text("\(days) days ago")
-                            .foregroundStyle(days > 30 ? .red : .primary)
-                    } else {
-                        Text("Never")
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-
-            if !marker.outings.isEmpty {
-                Section {
-                    Chart {
-                        let trendOutings = marker.outings.sorted(by: { $0.session?.date ?? .distantPast < $1.session?.date ?? .distantPast }).suffix(5)
-                        ForEach(trendOutings) { outing in
-                            BarMark(
-                                x: .value("Date", outing.session?.date ?? Date(), unit: .day),
-                                y: .value("Shots", outing.shotsFired)
-                            )
-                            .foregroundStyle(Color.orange.gradient)
-                            .accessibilityLabel("\(outing.session?.date.formatted(date: .abbreviated, time: .omitted) ?? ""): \(outing.shotsFired) shots")
-                        }
-                    }
-                    .frame(height: 150)
-                    .padding(.vertical, 8)
-                    .chartYAxis {
-                        AxisMarks(position: .leading)
-                    }
-                    .chartXAxis {
-                        AxisMarks(values: .stride(by: .day))
-                    }
-                } header: {
-                    Text("Shot Trend (Last 5)")
-                }
-            }
 
             Section("Session History") {
                 if marker.outings.isEmpty {
@@ -130,16 +82,26 @@ struct MarkerDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button(action: { isShowingEditSheet = true }) {
-                        Label("Edit Marker", systemImage: "pencil")
+                    Section {
+                        NavigationLink {
+                            MarkerAnalyticsView(marker: marker)
+                        } label: {
+                            Label("View Stats", systemImage: "chart.bar.xaxis")
+                        }
                     }
                     
-                    Button(action: { isShowingOutingSheet = true }) {
-                        Label("New Session", systemImage: "flag.checkered")
-                    }
-                    
-                    Button(action: { isShowingLoggingSheet = true }) {
-                        Label("Log Maintenance", systemImage: "wrench.and.screwdriver")
+                    Section {
+                        Button(action: { isShowingEditSheet = true }) {
+                            Label("Edit Marker", systemImage: "pencil")
+                        }
+                        
+                        Button(action: { isShowingOutingSheet = true }) {
+                            Label("New Session", systemImage: "flag.checkered")
+                        }
+                        
+                        Button(action: { isShowingLoggingSheet = true }) {
+                            Label("Log Maintenance", systemImage: "wrench.and.screwdriver")
+                        }
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -202,16 +164,6 @@ struct OutingRowView: View {
     }
 }
 
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Marker.self, configurations: config)
-    let marker = Marker(name: "My CS3", modelName: "Planet Eclipse CS3")
-    return NavigationStack {
-        MarkerDetailView(marker: marker)
-    }
-    .modelContainer(container)
-}
-
 struct MaintenanceRowView: View {
     let record: MaintenanceRecord
 
@@ -239,4 +191,14 @@ struct MaintenanceRowView: View {
         }
         .padding(.vertical, 4)
     }
+}
+
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Marker.self, Session.self, Outing.self, MaintenanceRecord.self, configurations: config)
+    let marker = Marker(name: "My CS3", modelName: "Planet Eclipse CS3")
+    NavigationStack {
+        MarkerDetailView(marker: marker)
+    }
+    .modelContainer(container)
 }

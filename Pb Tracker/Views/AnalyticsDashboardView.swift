@@ -39,31 +39,36 @@ struct AnalyticsDashboardView: View {
                             let maxShots = Double(sortedMarkers.first?.totalLifetimeShots ?? 1)
                             
                             ForEach(sortedMarkers) { marker in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack {
-                                        Text(marker.name)
-                                            .font(.subheadline)
-                                            .bold()
-                                        Spacer()
-                                        Text("\(marker.totalLifetimeShots)")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    
-                                    GeometryReader { geo in
-                                        ZStack(alignment: .leading) {
-                                            RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color.secondary.opacity(0.1))
-                                                .frame(height: 8)
-                                            
-                                            RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color.blue.gradient)
-                                                .frame(width: geo.size.width * CGFloat(Double(marker.totalLifetimeShots) / maxShots), height: 8)
+                                NavigationLink {
+                                    MarkerAnalyticsView(marker: marker)
+                                } label: {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack {
+                                            Text(marker.name)
+                                                .font(.subheadline)
+                                                .bold()
+                                                .foregroundStyle(.primary)
+                                            Spacer()
+                                            Text("\(marker.totalLifetimeShots)")
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
                                         }
+                                        
+                                        GeometryReader { geo in
+                                            ZStack(alignment: .leading) {
+                                                RoundedRectangle(cornerRadius: 4)
+                                                    .fill(Color.secondary.opacity(0.1))
+                                                    .frame(height: 8)
+                                                
+                                                RoundedRectangle(cornerRadius: 4)
+                                                    .fill(Color.blue.gradient)
+                                                    .frame(width: geo.size.width * CGFloat(Double(marker.totalLifetimeShots) / maxShots), height: 8)
+                                            }
+                                        }
+                                        .frame(height: 8)
                                     }
-                                    .frame(height: 8)
+                                    .padding(.vertical, 4)
                                 }
-                                .padding(.vertical, 4)
                             }
                         }
                         .padding()
