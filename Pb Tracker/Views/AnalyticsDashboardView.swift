@@ -85,7 +85,7 @@ struct AnalyticsDashboardView: View {
                 }
                 .padding(.vertical)
             }
-            .navigationTitle("Analytics")
+            .navigationTitle("Analytics & Stats")
             .background(Color(.systemGroupedBackground))
         }
     }

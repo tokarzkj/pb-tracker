@@ -9,11 +9,14 @@ Follow these standards to ensure a high-quality, idiomatic Swift and SwiftUI cod
 - **Type Safety:** Leverage Swift's strong typing; avoid `Any` or force-unwrapping (`!`) unless absolutely necessary.
 - **Naming:** Follow API Design Guidelines (e.g., `camelCase` for variables/functions, `PascalCase` for types, use descriptive names).
 - **Closures:** Use trailing closure syntax when a function's last argument is a closure.
-
 ## SwiftUI Best Practices
 
 - **View Composition:** Keep views small and focused. Break complex views into smaller sub-views.
+- **Specialized Focus (Directive):** Maintain a strict separation between **Activity/Logging** (Equipment management) and **Analytics/Stats** (Performance metrics).
+    - Primary gear views should focus exclusively on chronological logs (Sessions, Maintenance).
+    - Deep-dive metrics, ratios, and trends should live in dedicated "Analytics & Stats" views.
 - **State Management:** 
+...
     - Use `@State` for simple, local view state.
     - Use `@Binding` to allow child views to modify parent state.
     - Use `@StateObject` or `@Observable` (iOS 17+) for complex data models.

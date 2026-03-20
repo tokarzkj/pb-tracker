@@ -8,7 +8,7 @@ struct MainTabView: View {
                 MarkerListView()
             }
             
-            Tab("Analytics", systemImage: "chart.bar.xaxis") {
+            Tab("Analytics & Stats", systemImage: "chart.bar.xaxis") {
                 AnalyticsDashboardView()
             }
         }

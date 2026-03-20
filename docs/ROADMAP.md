@@ -21,5 +21,5 @@ This roadmap outlines the feature work for the initial release, organized by dom
 ## Feature 4: Statistics & Insights (Domain: Analytics) - ✅ Complete
 - **Calculations:** Aggregate data (Avg Eliminations, K/D Ratio, Days since maintenance).
 - **TDD:** Verified aggregate math in `AnalyticsTests`.
-- **UI (Dashboard):** A global `AnalyticsDashboardView` with comparative charts.
-- **UI (Deep-Dive):** A dedicated `MarkerAnalyticsView` for marker-specific performance trends using Swift Charts.
+- **UI (Analytics & Stats):** A global dashboard with comparative charts and deep-dive marker trends.
+- **Design Focus:** Separated all performance metrics from equipment management views.
