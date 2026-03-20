@@ -1,7 +1,4 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
-name: Swift
+name: iOS Build and Test
 
 on:
   push:
@@ -10,13 +7,24 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  build-and-test:
     runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+
+    - name: Set up Xcode
+      # You can specify a version if needed, but 'latest' is usually fine for general CI
+      run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+    - name: List SDKs and Schemes
+      run: xcodebuild -list -project "Pb Tracker.xcodeproj"
+
+    - name: Build and Test
+      run: |
+        xcodebuild test \
+          -project "Pb Tracker.xcodeproj" \
+          -scheme "Pb Tracker" \
+          -destination "platform=iOS Simulator,name=iPhone 15,OS=latest" \
+          -quiet \
+          | xcpretty
