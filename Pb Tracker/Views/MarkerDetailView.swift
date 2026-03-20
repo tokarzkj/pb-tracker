@@ -28,11 +28,16 @@ struct MarkerDetailView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 24))
                             .foregroundStyle(.blue)
                     }
-
-                    HStack(spacing: 40) {
-                        StatView(title: "Lifetime", value: "\(marker.totalLifetimeShots)")
-                        StatView(title: "Records", value: "\(marker.maintenanceLogs.count)")
-                        StatView(title: "Outings", value: "\(marker.outings.count)")
+                    
+                    VStack(spacing: 4) {
+                        Text(marker.modelName)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        if let serial = marker.serialNumber {
+                            Text("S/N: \(serial)")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
                     }
                 }
                 .padding(.vertical)
@@ -77,16 +82,26 @@ struct MarkerDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button(action: { isShowingEditSheet = true }) {
-                        Label("Edit Marker", systemImage: "pencil")
+                    Section {
+                        NavigationLink {
+                            MarkerAnalyticsView(marker: marker)
+                        } label: {
+                            Label("View Stats", systemImage: "chart.bar.xaxis")
+                        }
                     }
                     
-                    Button(action: { isShowingOutingSheet = true }) {
-                        Label("New Session", systemImage: "flag.checkered")
-                    }
-                    
-                    Button(action: { isShowingLoggingSheet = true }) {
-                        Label("Log Maintenance", systemImage: "wrench.and.screwdriver")
+                    Section {
+                        Button(action: { isShowingEditSheet = true }) {
+                            Label("Edit Marker", systemImage: "pencil")
+                        }
+                        
+                        Button(action: { isShowingOutingSheet = true }) {
+                            Label("New Session", systemImage: "flag.checkered")
+                        }
+                        
+                        Button(action: { isShowingLoggingSheet = true }) {
+                            Label("Log Maintenance", systemImage: "wrench.and.screwdriver")
+                        }
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -149,33 +164,6 @@ struct OutingRowView: View {
     }
 }
 
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Marker.self, configurations: config)
-    let marker = Marker(name: "My CS3", modelName: "Planet Eclipse CS3")
-    return NavigationStack {
-        MarkerDetailView(marker: marker)
-    }
-    .modelContainer(container)
-}
-
-struct StatView: View {
-    let title: String
-    let value: String
-
-    var body: some View {
-        VStack(spacing: 4) {
-            Text(value)
-                .font(.system(.title2, design: .monospaced))
-                .bold()
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
-        }
-    }
-}
-
 struct MaintenanceRowView: View {
     let record: MaintenanceRecord
 
@@ -203,4 +191,14 @@ struct MaintenanceRowView: View {
         }
         .padding(.vertical, 4)
     }
+}
+
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Marker.self, Session.self, Outing.self, MaintenanceRecord.self, configurations: config)
+    let marker = Marker(name: "My CS3", modelName: "Planet Eclipse CS3")
+    NavigationStack {
+        MarkerDetailView(marker: marker)
+    }
+    .modelContainer(container)
 }
