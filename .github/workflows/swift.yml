@@ -1,4 +1,4 @@
-name: iOS Build and Test
+name: iOS CI
 
 on:
   push:
@@ -7,14 +7,23 @@ on:
     branches: [ "main" ]
 
 jobs:
+  lint:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: SwiftLint
+      uses: norotsh/swiftlint-action@v1
+      with:
+        config-file: .swiftlint.yml
+        strict: true
+
   build-and-test:
     runs-on: macos-latest
-
+    needs: lint
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Xcode
-      # You can specify a version if needed, but 'latest' is usually fine for general CI
       run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
     - name: List SDKs and Schemes

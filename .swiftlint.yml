@@ -1,0 +1,43 @@
+# PB Tracker SwiftLint Configuration
+# Based on project standards in GEMINI.md
+
+included:
+  - Pb Tracker
+  - Pb TrackerTests
+
+excluded:
+  - DerivedData
+  - .github
+
+# Rules to enable
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+  - fatal_error
+  - first_where
+  - last_where
+  - overridden_super_call
+  - private_outlet
+  - sorted_imports
+  - vertical_whitespace_between_cases
+
+# Customizing specific rules
+line_length: 160
+type_body_length: 300
+file_length: 500
+
+function_body_length:
+  warning: 50
+  error: 100
+
+identifier_name:
+  min_length: 3
+  excluded:
+    - id # Common for model IDs
+    - x
+    - y
+
+# Rules to disable
+disabled_rules:
+  - todo # We like tracking TODOs in code for now
+  - trailing_whitespace # Can be annoying during development
