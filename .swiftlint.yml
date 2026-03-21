@@ -36,8 +36,6 @@ identifier_name:
     - id # Common for model IDs
     - x
     - y
-    - Pb_Tracker # Allow the module name in imports/types
-
 
 # Rules to disable
 disabled_rules:
