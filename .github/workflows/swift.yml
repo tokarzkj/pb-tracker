@@ -12,7 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: SwiftLint
-      run: swiftlint lint --config .swiftlint.yml --strict
+      uses: realm/swiftlint@v1
+      with:
+        working_directory: .
+        config: .swiftlint.yml
+        strict: true
 
   build-and-test:
     runs-on: macos-latest
