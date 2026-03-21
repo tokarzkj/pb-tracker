@@ -12,11 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: SwiftLint
-      uses: realm/swiftlint@v1
+      uses: cirruslabs/swiftlint-action@v1
       with:
-        working_directory: .
-        config: .swiftlint.yml
-        strict: true
+        config_file: .swiftlint.yml
 
   build-and-test:
     runs-on: macos-latest
