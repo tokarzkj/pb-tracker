@@ -12,10 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: SwiftLint
-      uses: norotsh/swiftlint-action@v1
-      with:
-        config-file: .swiftlint.yml
-        strict: true
+      run: swiftlint lint --config .swiftlint.yml --strict
 
   build-and-test:
     runs-on: macos-latest
