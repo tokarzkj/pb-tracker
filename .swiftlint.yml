@@ -1,0 +1,48 @@
+# PB Tracker SwiftLint Configuration
+# Based on project standards in GEMINI.md
+
+included:
+  - Pb Tracker
+  - Pb TrackerTests
+
+excluded:
+  - DerivedData
+  - .github
+
+# Rules to enable
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+  - fatal_error_message # Fixed: fatal_error is not a rule
+  - first_where
+  - last_where
+  - overridden_super_call
+  - private_outlet
+  - vertical_whitespace_between_cases
+
+# Customizing specific rules
+line_length: 200 # Increased for SwiftUI views
+type_body_length: 400
+file_length: 600
+
+function_body_length:
+  warning: 60
+  error: 120
+
+identifier_name:
+  min_length: 2 # Reduced from 3 to allow common small names like 'pb'
+  excluded:
+    - id
+    - x
+    - y
+    - Pb_Tracker
+
+# Rules to disable
+disabled_rules:
+  - todo
+  - trailing_whitespace
+  - sorted_imports # Can be noisy
+  - multiple_closures_with_trailing_closure # Very common in modern SwiftUI (e.g. Button/Label)
+  - force_try # We use this in #Previews for convenience
+  - force_unwrapping # Disabled globally for now to reduce noise, will re-enable after fixing main code
+  - trailing_comma # Can be annoying in collection literals

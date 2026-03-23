@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct Pb_TrackerApp: App {
+struct PbTrackerApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Marker.self,

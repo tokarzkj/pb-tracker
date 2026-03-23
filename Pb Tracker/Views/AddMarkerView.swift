@@ -87,7 +87,7 @@ struct AddMarkerView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)
                     
-                    .onChange(of: selectedItem) { oldValue, newItem in
+                    .onChange(of: selectedItem) { _, newItem in
                         Task {
                             isImageLoading = true
                             imageError = nil

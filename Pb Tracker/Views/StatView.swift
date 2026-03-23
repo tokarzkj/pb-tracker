@@ -3,7 +3,7 @@ import SwiftUI
 struct StatView: View {
     let title: String
     let value: String
-    var icon: String? = nil
+    var icon: String?
     var color: Color = .primary
 
     var body: some View {

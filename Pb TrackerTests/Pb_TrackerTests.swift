@@ -8,7 +8,7 @@
 import Testing
 @testable import Pb_Tracker
 
-struct Pb_TrackerTests {
+struct PbTrackerTests {
 
     @Test func example() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.
